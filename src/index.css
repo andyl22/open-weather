@@ -1,0 +1,62 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body, html {
+  display: flex;
+  min-height: 100%;
+  width: 100%;
+}
+
+header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  height: 100vh;
+  padding: 30px;
+  background: rgb(55, 51, 51);
+  color: white;
+  flex: 0;
+}
+
+input[type="search"] {
+  height: 30px;
+  width: 200px;
+  padding: 10px;
+  border-radius: 15px;
+  border: none;
+  outline: none;
+}
+
+main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+}
+
+.entire-forecast {
+  display: flex;
+  justify-content: center;
+  align-content: flex-start;
+  flex-wrap: wrap;
+  height: 90%;
+  width: 95%;
+  gap: 10px;
+}
+
+.day-forecast {
+  display: flex;
+  width: 250px;
+  height: 150px;
+  background: rgb(221, 218, 218);
+  border: 1px solid rgb(165, 165, 165);
+}
+
+.temp {
+  font-size: 30px;
+  font-weight: bolder;
+}
