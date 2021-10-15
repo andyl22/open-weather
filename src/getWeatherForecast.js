@@ -4,7 +4,7 @@ const positionStackAPIKey = 'b3950d120c0d2d41174eb990321f4389';
 const openWeatherAPIKey = 'facef8942e15e4523244c4fecc91b001';
 
 async function getLatLong(locationQuery) {
-  let response = await fetch(`http://api.positionstack.com/v1/forward?access_key=${positionStackAPIKey}&query=${locationQuery}`, { mode: 'cors' });
+  let response = await fetch(`https://api.positionstack.com/v1/forward?access_key=${positionStackAPIKey}&query=${locationQuery}`, { mode: 'cors' });
   try {
     response = await response.json();
     return [response.data[0].latitude, response.data[0].longitude];
