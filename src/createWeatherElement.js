@@ -1,8 +1,7 @@
 import moment from 'moment';
 
 async function assignWeatherElement(weather, iteration) {
-  const mainWeatherContainer = document.getElementsByClassName('entire-forecast')[0];
-  console.log(mainWeatherContainer.childNodes[iteration]);
+  const mainWeatherContainer = document.getElementsByClassName('hourly-forecast')[0];
   const dayForecast = mainWeatherContainer.childNodes[iteration];
   const icon = dayForecast.querySelector('.weather-icon');
   const date = dayForecast.querySelector('.date');
@@ -16,8 +15,15 @@ async function assignWeatherElement(weather, iteration) {
   condition.textContent = `${weather.condition} - ${weather.conditionDetail}`;
 }
 
+function reassignTemps(tempUom) {
+  const mainWeatherContainer = document.getElementsByClassName('hourly-forecast')[0];
+  mainWeatherContainer.childNodes.forEach((node) => {
+    console.log(node.querySelector('.temp p'));
+  });
+}
+
 async function createWeatherElements() {
-  const mainWeatherContainer = document.getElementsByClassName('entire-forecast')[0];
+  const mainWeatherContainer = document.getElementsByClassName('hourly-forecast')[0];
   const dayForecast = document.createElement('div');
   const weatherDetails = document.createElement('div');
   const temp = document.createElement('div');
@@ -43,4 +49,4 @@ async function createWeatherElements() {
   mainWeatherContainer.appendChild(dayForecast);
 }
 
-export { assignWeatherElement, createWeatherElements };
+export { assignWeatherElement, createWeatherElements, reassignTemps };
