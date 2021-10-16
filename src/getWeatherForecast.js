@@ -1,8 +1,9 @@
 import { Loader } from '@googlemaps/js-api-loader';
-import { createWeatherElements, assignWeatherElement } from './createWeatherElement';
+import { createWeatherElements, assignWeatherElement, setTempUom } from './createWeatherElement';
 
 const positionStackAPIKey = 'b3950d120c0d2d41174eb990321f4389';
 const openWeatherAPIKey = 'facef8942e15e4523244c4fecc91b001';
+let geocoder;
 
 async function getWeatherForecast(latLong) {
   const [lat, long] = latLong;
@@ -16,23 +17,6 @@ async function getWeatherForecast(latLong) {
   } catch (error) {
     throw new Error(400);
   }
-}
-
-let geocoder;
-
-const loader = new Loader({
-  apiKey: 'AIzaSyCV5Mobc-ukMVdPCHMBPYUg8HTLitaHsls',
-  version: 'weekly',
-});
-
-function loadScript() {
-  loader
-    .load()
-    .then(() => {
-      geocoder = new google.maps.Geocoder();
-      console.log('Done Loading');
-      getOpenWeatherForCity();
-    });
 }
 
 async function getLatLongPositionStack(locationQuery) {
@@ -73,6 +57,11 @@ async function weatherParseObj(weatherObj) {
   return weather;
 }
 
+function enableListeners() {
+  document.querySelector('.temp-uom').childNodes[0].addEventListener('click', setTempUom);
+  document.querySelector('.temp-uom').childNodes[1].addEventListener('click', setTempUom);
+}
+
 async function getOpenWeatherForCity() {
   const latLong = await getLatLongPositionStack('San Francisco, CA'); // positionStack for testing
   // const latLong = await getLatLong(); // google API costs
@@ -82,6 +71,20 @@ async function getOpenWeatherForCity() {
       .then(createWeatherElements())
       .then((parsedWeatherObj) => assignWeatherElement(parsedWeatherObj, i, false));
   }
+  enableListeners();
+}
+
+function loadScript() {
+  const loader = new Loader({
+    apiKey: 'AIzaSyCV5Mobc-ukMVdPCHMBPYUg8HTLitaHsls',
+    version: 'weekly',
+  });
+
+  loader.load().then(() => {
+    geocoder = new google.maps.Geocoder();
+    console.log('Done Loading');
+    getOpenWeatherForCity();
+  });
 }
 
 export { loadScript, getOpenWeatherForCity };

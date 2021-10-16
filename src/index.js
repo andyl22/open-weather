@@ -14,12 +14,5 @@ if (process.env.NODE_ENV === 'development') {
   console.log('Development mode!');
 }
 
-function init() {
-  document.querySelector('.temp-uom').childNodes[0].addEventListener('click', setTempUom);
-  document.querySelector('.temp-uom').childNodes[1].addEventListener('click', setTempUom);
-}
-
 getOpenWeatherForCity();
 // loadScript();
-
-init();
