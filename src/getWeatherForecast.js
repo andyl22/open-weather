@@ -1,5 +1,5 @@
 import { Loader } from '@googlemaps/js-api-loader';
-import { createWeatherElements, assignWeatherElement, setTempUom } from './createWeatherElement';
+import { existingElementChecker, createWeatherElements, assignWeatherData, enableTempUomOption } from './createWeatherElement';
 
 const positionStackAPIKey = 'b3950d120c0d2d41174eb990321f4389';
 const openWeatherAPIKey = 'facef8942e15e4523244c4fecc91b001';
@@ -26,7 +26,7 @@ async function getLatLongPositionStack(locationQuery) {
   );
   try {
     response = await response.json();
-    return [response.data[0].latitude, response.data[0].longitude];
+    return response;
   } catch (error) {
     throw new Error(400);
   }
@@ -57,21 +57,41 @@ async function weatherParseObj(weatherObj) {
   return weather;
 }
 
-function enableListeners() {
-  document.querySelector('.temp-uom').childNodes[0].addEventListener('click', setTempUom);
-  document.querySelector('.temp-uom').childNodes[1].addEventListener('click', setTempUom);
+function assignDailyWeather(weatherParent) {
+  if (!existingElementChecker(document.getElementsByClassName('current-forecast')[0].childNodes)) {
+    weatherParseObj(weatherParent.current)
+      .then(createWeatherElements(document.getElementsByClassName('current-forecast')[0]))
+      .then((parsedWeatherObj) => assignWeatherData(parsedWeatherObj, document.getElementsByClassName('current-forecast')[0]));
+  } else {
+    weatherParseObj(weatherParent.current)
+      .then((parsedWeatherObj) => assignWeatherData(parsedWeatherObj, document.getElementsByClassName('current-forecast')[0]));
+  }
 }
 
-async function getOpenWeatherForCity() {
-  const latLong = await getLatLongPositionStack('San Francisco, CA'); // positionStack for testing
-  // const latLong = await getLatLong(); // google API costs
-  const weatherParent = await getWeatherForecast(latLong);
-  for (let i = 1; i < weatherParent.hourly.length; i += 1) {
-    weatherParseObj(weatherParent.hourly[i])
-      .then(createWeatherElements())
-      .then((parsedWeatherObj) => assignWeatherElement(parsedWeatherObj, i, false));
+function assignHourlyWeather(weatherParent) {
+  if (!existingElementChecker(document.getElementsByClassName('hourly-forecast')[0].childNodes)) {
+    for (let i = 1; i < weatherParent.hourly.length; i += 1) {
+      weatherParseObj(weatherParent.hourly[i])
+        .then(createWeatherElements(document.getElementsByClassName('hourly-forecast')[0]))
+        .then((parsedWeatherObj) => assignWeatherData(parsedWeatherObj, document.getElementsByClassName('hourly-forecast')[0].childNodes[i-1]));
+    }
+  } else {
+    for (let i = 1; i < weatherParent.hourly.length; i += 1) {
+      weatherParseObj(weatherParent.hourly[i])
+        .then(document.getElementsByClassName('hourly-forecast')[0].childNodes)
+        .then((parsedWeatherObj) => assignWeatherData(parsedWeatherObj, document.getElementsByClassName('hourly-forecast')[0].childNodes[i-1]));
+    }
   }
-  enableListeners();
+}
+
+async function generateWeatherForLocation(locationQuery = 'San Francisco, California') {
+  const response = await getLatLongPositionStack(locationQuery); // positionStack for testing
+  const weatherParent = await getWeatherForecast(
+    [response.data[0].latitude, response.data[0].longitude],
+  );
+  assignHourlyWeather(weatherParent);
+  assignDailyWeather(weatherParent);
+  enableTempUomOption();
 }
 
 function loadScript() {
@@ -82,9 +102,8 @@ function loadScript() {
 
   loader.load().then(() => {
     geocoder = new google.maps.Geocoder();
-    console.log('Done Loading');
-    getOpenWeatherForCity();
+    generateWeatherForLocation();
   });
 }
 
-export { loadScript, getOpenWeatherForCity };
+export { loadScript, generateWeatherForLocation, existingElementChecker };

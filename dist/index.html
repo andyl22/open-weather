@@ -1,23 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <script src="main.js" defer></script>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Weather Forecast</title>
-</head>
-<body>
-  <header>
-    <h1>Weather Forecast </h1>
-    <input type="search" placeholder="City Name">
-    <div class="temp-uom"><button id="farenheit" class="active">F</button><button id="celsius">C</button></div>
-  </header>
-  <main>
-    <h1 id="weather-location"> Weather in San Francisco </h1>
-    <h1>Hourly Forecast</h1>
-    <div class="hourly-forecast">
-    </div>
-  </main>
-</body>
+  <head>
+    <script src="main.js" defer></script>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather Forecast</title>
+  </head>
+  <body>
+    <header>
+      <h1>Weather Forecast</h1>
+      <form id="location-search-form">
+        <input
+          type="search"
+          placeholder="City Name"
+          id="location-search-input"
+        />
+      </form>
+      <div class="temp-uom">
+        <button id="farenheit" class="active">F</button
+        ><button id="celsius">C</button>
+      </div>
+    </header>
+    <main>
+      <h1 id="weather-location">Weather in San Francisco</h1>
+      <div class="forecast">
+        <div class="current-container">
+          <h2>Current Forecast</h2>
+          <div class="current-forecast"></div>
+        </div>
+        <div class="hourly-container">
+          <h2>Hourly Forecast</h2>
+          <div class="hourly-forecast"></div>
+        </div>
+      </div>
+    </main>
+  </body>
 </html>
