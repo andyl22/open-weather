@@ -4,9 +4,9 @@ let tempUom = 'farenheit';
 
 function convertTemps(temp) {
   if (tempUom === 'celsius') {
-    return Math.round((temp - 32) * (5 / 9) * 100) / 100;
+    return Math.round((temp - 32) * (5 / 9));
   }
-  return Math.round(((temp * 1.8) + 32) * 100) / 100;
+  return Math.round(((temp * 1.8) + 32));
 }
 
 function reassignTemps() {
@@ -40,6 +40,7 @@ function enableTempUomOption() {
 }
 
 function assignWeatherData(weather, weatherElement) {
+  const temperature = (tempUom === 'celsius') ? convertTemps(weather.temp, tempUom) : Math.round(weather.temp);
   const icon = weatherElement.querySelector('.weather-icon');
   const date = weatherElement.querySelector('.date');
   const feelsLike = weatherElement.querySelector('.feels-like');
@@ -47,8 +48,8 @@ function assignWeatherData(weather, weatherElement) {
   const condition = weatherElement.querySelector('.condition');
   icon.src = `https://openweathermap.org/img/wn/${weather.icon}@2x.png`;
   date.innerText = `${moment(weather.date).format('MMM Do YY')} \n ${moment(weather.date).format('LT')}`;
-  tempText.textContent = (tempUom === 'celsius') ? convertTemps(weather.temp, tempUom) : weather.temp;
-  feelsLike.innerText = `Feels Like: ${weather.feelsLike} \n ${weather.wind} mph winds\n`;
+  tempText.textContent = temperature;
+  feelsLike.innerText = `Feels Like: ${temperature} \n ${weather.wind} mph winds\n`;
   condition.textContent = `${weather.condition} - ${weather.conditionDetail}`;
 }
 

@@ -4,11 +4,9 @@
 }
 
 html, body {
+  display: flex;
   height: 100%;
-}
-
-body {
-  flex-direction: column;
+  width: 100%;
 }
 
 header {
@@ -20,12 +18,9 @@ header {
   color: white;
 }
 
-header h1 {
-  text-align: center;
-}
-
 header h1, header input {
   margin: 10px 10px;
+  text-align: center;
 }
 
 input[type="search"] {
@@ -37,32 +32,41 @@ input[type="search"] {
   outline: none;
 }
 
-#weather-location {
-  text-align: center;
-}
-
 main {
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  height: 80%;
   width: 100%;
+  overflow: hidden;
+  background: url('weather.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+#weather-location {
+  margin: 20px 0px 20px 30px;
 }
 
 .forecast {
   display: flex;
+  flex: 0;
   gap: 50px;
   height: 100%;
 }
 
-.hourly-forecast, .current-forecast .day-forecast {
+.hourly-forecast, .current-forecast, .daily-forecast {
   border-radius: 20px;
+  gap: 2px;
 }
 
-.hourly-forecast {
+.hourly-container {
+  width: auto;
+  overflow-x: hidden;
+}
+
+.current-forecast, .daily-forecast, .hourly-forecast {
   display: flex;
-  width: 100%;
-  height: auto;
+  flex: 0;
+  max-width: fit-content;
   overflow-x: auto;
 }
 
@@ -80,45 +84,40 @@ button:hover {
 }
 
 .temp-uom button {
-  height: 50px;
+  height: 20px;
   width: 50px;
   background: rgb(228, 221, 221);
   border: none;
+  border-radius: 20px;
 }
 
 h2 {
   margin-bottom: 20px;
 }
 
-.hourly-container, .current-container {
-  flex-direction: column;
+.hourly-container, .current-container, .weekly-container {
   align-items: center;
   border-radius: 20px;
   height: 100%;
   padding: 30px;
 }
 
-.hourly-container {
-  width: auto;
-  overflow-x: auto;
-}
-
 .day-forecast {
   padding: 10px;
-  background: rgb(153 131 131 / 36%);
+  color: #dbd7c8;
+  background: rgb(23 38 66 / 75%);
 }
 
 .weather-details {
   display: flex;
   flex-direction: column;
   gap: 5px;
-  width: 180px;
-  padding: 15px 0px;
+  width: 160px;
+  padding: 5px 0px;
 }
 
 .temp-summary {
   display: flex;
-  font-size: 18px;
   align-items: center;
   justify-content: space-between;
 }
@@ -133,10 +132,16 @@ h2 {
 
 .temp {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
+}
+
+.temp p {
+  position: relative;
+  bottom: 5px;
+  color: white;
   font-size: 18px;
-  font-weight: bolder;
+  font-weight: bold;
 }
 
 .feels-like, .condition {
@@ -153,7 +158,7 @@ h2 {
     flex-direction: column;
   }
 
-  header{ 
+  header{
     padding: 20px 0px;
     gap: 0px;
   }
@@ -162,18 +167,17 @@ h2 {
     margin: 0px;
   }
 
-  .temp-uom button {
-    height: 20px;
-    width: 70px;
+  #weather-location {
+    text-align: center;
   }
 
   main {
+    height: 100%;
     width: 100%;
   }
 
   .forecast {
     flex-direction: column;
-    justify-content: flex-start;
   }
 
   .hourly-container, .current-container {
@@ -183,9 +187,5 @@ h2 {
 
   .current-container {
     width: 220px;
-  }
-
-  .hourly-forecast {
-    gap: 2px;
   }
 }

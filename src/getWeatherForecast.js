@@ -1,5 +1,7 @@
 import { Loader } from '@googlemaps/js-api-loader';
-import { existingElementChecker, createWeatherElements, assignWeatherData, enableTempUomOption } from './createWeatherElement';
+import {
+  existingElementChecker, createWeatherElements, assignWeatherData, enableTempUomOption,
+} from './createWeatherElement';
 
 const positionStackAPIKey = 'b3950d120c0d2d41174eb990321f4389';
 const openWeatherAPIKey = 'facef8942e15e4523244c4fecc91b001';
@@ -45,8 +47,8 @@ async function getLatLongPositionStack(locationQuery) {
 // }
 
 async function weatherParseObj(weatherObj) {
+  console.log(weatherObj);
   const weather = {
-    temp: weatherObj.temp,
     feelsLike: weatherObj.feels_like,
     condition: weatherObj.weather[0].main,
     conditionDetail: weatherObj.weather[0].description,
@@ -54,10 +56,13 @@ async function weatherParseObj(weatherObj) {
     wind: weatherObj.wind_speed,
     icon: weatherObj.weather[0].icon,
   };
+
+  weather.temp = (typeof (weatherObj.temp) === 'number') ? weatherObj.temp : weatherObj.temp.day;
+
   return weather;
 }
 
-function assignDailyWeather(weatherParent) {
+function assignCurrentWeather(weatherParent) {
   if (!existingElementChecker(document.getElementsByClassName('current-forecast')[0].childNodes)) {
     weatherParseObj(weatherParent.current)
       .then(createWeatherElements(document.getElementsByClassName('current-forecast')[0]))
@@ -73,13 +78,30 @@ function assignHourlyWeather(weatherParent) {
     for (let i = 1; i < weatherParent.hourly.length; i += 1) {
       weatherParseObj(weatherParent.hourly[i])
         .then(createWeatherElements(document.getElementsByClassName('hourly-forecast')[0]))
-        .then((parsedWeatherObj) => assignWeatherData(parsedWeatherObj, document.getElementsByClassName('hourly-forecast')[0].childNodes[i-1]));
+        .then((parsedWeatherObj) => assignWeatherData(parsedWeatherObj, document.getElementsByClassName('hourly-forecast')[0].childNodes[i - 1]));
     }
   } else {
     for (let i = 1; i < weatherParent.hourly.length; i += 1) {
       weatherParseObj(weatherParent.hourly[i])
         .then(document.getElementsByClassName('hourly-forecast')[0].childNodes)
-        .then((parsedWeatherObj) => assignWeatherData(parsedWeatherObj, document.getElementsByClassName('hourly-forecast')[0].childNodes[i-1]));
+        .then((parsedWeatherObj) => assignWeatherData(parsedWeatherObj, document.getElementsByClassName('hourly-forecast')[0].childNodes[i - 1]));
+    }
+  }
+}
+
+function assignDailyWeather(weatherParent) {
+  console.log(weatherParent);
+  if (!existingElementChecker(document.getElementsByClassName('daily-forecast')[0].childNodes)) {
+    for (let i = 1; i < weatherParent.daily.length; i += 1) {
+      weatherParseObj(weatherParent.daily[i])
+        .then(createWeatherElements(document.getElementsByClassName('daily-forecast')[0]))
+        .then((parsedWeatherObj) => assignWeatherData(parsedWeatherObj, document.getElementsByClassName('daily-forecast')[0].childNodes[i - 1]));
+    }
+  } else {
+    for (let i = 1; i < weatherParent.daily.length; i += 1) {
+      weatherParseObj(weatherParent.daily[i])
+        .then(document.getElementsByClassName('daily-forecast')[0].childNodes)
+        .then((parsedWeatherObj) => assignWeatherData(parsedWeatherObj, document.getElementsByClassName('daily-forecast')[0].childNodes[i - 1]));
     }
   }
 }
@@ -90,6 +112,7 @@ async function generateWeatherForLocation(locationQuery = 'San Francisco, Califo
     [response.data[0].latitude, response.data[0].longitude],
   );
   assignHourlyWeather(weatherParent);
+  assignCurrentWeather(weatherParent);
   assignDailyWeather(weatherParent);
   enableTempUomOption();
 }
