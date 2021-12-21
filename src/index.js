@@ -26,5 +26,4 @@ function locationQuery(e) {
 const searchForm = document.getElementById('location-search-form');
 searchForm.addEventListener('submit', locationQuery);
 
-generateWeatherForLocation();
-// loadScript();
+loadScript();
